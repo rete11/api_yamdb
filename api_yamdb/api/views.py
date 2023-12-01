@@ -5,7 +5,7 @@ from rest_framework.viewsets import ModelViewSet
 
 from api.permissions import IsOwnerOrReadOnly
 from api.serializers import CommentSerializer, ReviewSerializer
-from titles.models import Title, Review
+from titles.models import Review, Title
 
 
 class Pagination(LimitOffsetPagination):

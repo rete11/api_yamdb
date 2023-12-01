@@ -8,10 +8,16 @@ from api.views import CommentsViewSet, ReviewsViewSet
 app_name = 'api'
 
 router = routers.SimpleRouter()
-router.register(r'titles/(?P<title_id>[^/.]+)/reviews/', ReviewsViewSet,
-                basename='reviews')
-router.register(r'titles/(?P<title_id>[^/.]+)/reviews/(?P<review_id>[^/.]+)/comments/', CommentsViewSet,
-                basename='comments')
+router.register(
+    r'titles/(?P<title_id>[^/.]+)/reviews/',
+    ReviewsViewSet,
+    basename='reviews'
+)
+router.register(
+    r'titles/(?P<title_id>[^/.]+)/reviews/(?P<review_id>[^/.]+)/comments/',
+    CommentsViewSet,
+    basename='comments'
+)
 
 
 urlpatterns = [
