@@ -1,12 +1,14 @@
 from django.urls import include, path
 from rest_framework import routers
 
-from api.views import ReviewsViewSet
+from api.views import CommentsViewSet, ReviewsViewSet
 
 
 router = routers.SimpleRouter()
 router.register(r'titles/(?P<title_id>[^/.]+)/reviews/', ReviewsViewSet,
                 basename='reviews')
+router.register(r'titles/(?P<title_id>[^/.]+)/reviews/(?P<review_id>[^/.]+)/comments/', CommentsViewSet,
+                basename='comments')
 
 
 urlpatterns = [
