@@ -1,7 +1,11 @@
 from django.db.models import Avg
 from rest_framework import serializers
+from rest_framework.relations import SlugRelatedField
 
 from titles.models import Comment, Review, Title
+from categories.models import Category
+from genres.models import Genre
+from titles.validators import validate_years
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -52,3 +56,48 @@ class TitleSerializer(serializers.ModelSerializer):
         )
 
         return average
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        exclude = ('id',)
+        lookup_field = 'slug'
+
+
+class GenreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Genre
+        exclude = ('id',)
+        lookup_field = 'slug'
+
+
+class GetTitleSerializer(serializers.ModelSerializer):
+    category = CategorySerializer()
+    genre = GenreSerializer(many=True)
+    rating = serializers.IntegerField(default=0)
+
+    class Meta:
+        model = Title
+        fields = '__all__'
+        read_only_fields = ('__all__',)
+
+
+class PostTitleSerializer(serializers.ModelSerializer):
+    category = SlugRelatedField(
+        slug_field='slug', queryset=Category.objects.all()
+    )
+    genre = SlugRelatedField(
+        slug_field='slug', queryset=Genre.objects.all(), many=True
+    )
+    year = serializers.IntegerField()
+
+    def to_representation(self, value):
+        return GetTitleSerializer(self.instance).data
+
+    def validate_years(self, value):
+        return validate_years(value)
+
+    class Meta:
+        model = Title
+        fields = '__all__'
