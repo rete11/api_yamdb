@@ -3,6 +3,7 @@ from rest_framework import routers
 from rest_framework.authtoken import views
 
 from api.views import CommentsViewSet, ReviewsViewSet
+from users.views import SignUpView, TokenView, UserViewSet
 
 
 app_name = 'api'
@@ -18,10 +19,11 @@ router.register(
     CommentsViewSet,
     basename='comments'
 )
+router.register(r'users', UserViewSet, basename='users')
 
 
 urlpatterns = [
     path('v1/', include(router.urls)),
-    # path('v1/auth/signup/', , name='signup'),
-    # path('v1/auth/token/', , name='token_obtain'),
+    path('v1/auth/signup/', SignUpView.as_view(), name='signup'),
+    path('v1/auth/token/', TokenView.as_view(), name='token_obtain'),
 ]
