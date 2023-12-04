@@ -8,3 +8,4 @@ def validate_years(value):
         raise ValidationError(
             f'{value} год не должен быть больше {now}'
         )
+    return value

@@ -1,4 +1,5 @@
 from django.db.models import Avg
+from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
 
@@ -20,13 +21,20 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = Review
         read_only_fields = ("title",)
 
+    def update(self, instance, validated_data):
+        validated_data['author'] = instance.author
+        validated_data['title'] = instance.title
+        return super().update(instance, validated_data)
+
     def validate(self, attrs):
-        author = attrs["author"]
-        title = attrs["title"]
-        if Review.objects.filter(author=author, title=title).exists():
-            raise serializers.ValidationError(
-                f"Вы уже оставляли отзыв на {title}"
-            )
+        if self.context['request'].method == 'POST':
+            author = self.context['request'].user
+            title_id = self.context['view'].kwargs['title_id']
+            title = get_object_or_404(Title, pk=title_id)
+            if Review.objects.filter(author=author, title=title).exists():
+                raise serializers.ValidationError(
+                    f"Вы уже оставляли отзыв на {title}"
+                )
 
         return attrs
 
