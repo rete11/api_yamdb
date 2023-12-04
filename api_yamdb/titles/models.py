@@ -1,10 +1,11 @@
 from django.contrib.auth import get_user_model
-from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.db import models
 
-from genres.models import Genre
-from categories.models import Category
 from .validators import validate_years
+from categories.models import Category
+from genres.models import Genre
+
 
 User = get_user_model()
 

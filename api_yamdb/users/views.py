@@ -9,9 +9,9 @@ from rest_framework.response import Response
 from rest_framework.serializers import ValidationError
 from rest_framework_simplejwt.tokens import AccessToken
 
-from api.permissions import IsAdmin
 from .models import CustomUser
 from .serializers import SignUpSerializer, TokenSerializer, UserSerializer
+from api.permissions import IsAdmin
 
 
 class UserViewSet(viewsets.ModelViewSet):

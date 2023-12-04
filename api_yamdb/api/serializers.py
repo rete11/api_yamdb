@@ -3,9 +3,9 @@ from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
 
-from titles.models import Comment, Review, Title
 from categories.models import Category
 from genres.models import Genre
+from titles.models import Comment, Review, Title
 from titles.validators import validate_years
 
 

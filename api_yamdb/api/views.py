@@ -1,23 +1,23 @@
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.filters import SearchFilter
-from django_filters.rest_framework import DjangoFilterBackend
 
+from api.filters import TitleFilter
 from api.permissions import IsOwnerOrReadOnly
 from api.serializers import (
-    CommentSerializer,
-    ReviewSerializer,
     CategorySerializer,
+    CommentSerializer,
     GenreSerializer,
     GetTitleSerializer,
     PostTitleSerializer,
+    ReviewSerializer,
 )
-from api.filters import TitleFilter
-from titles.models import Review, Title
 from categories.models import Category
 from genres.models import Genre
+from titles.models import Review, Title
 
 
 class Pagination(LimitOffsetPagination):
