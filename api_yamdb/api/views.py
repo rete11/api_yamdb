@@ -4,7 +4,6 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.filters import SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
-from django.db.models import Avg
 
 from api.permissions import IsOwnerOrReadOnly
 from api.serializers import (
@@ -86,9 +85,7 @@ class GenreViewSet(ModelViewSet):
 
 
 class TitleViewSet(ModelViewSet):
-    queryset = Title.objects.annotate(rating=Avg('reviews__score')).order_by(
-        'id'
-    )
+    queryset = Title.objects.all()
     serializer_class = GetTitleSerializer
     permission_classes = (IsAuthenticatedOrReadOnly,)
     filter_backends = (DjangoFilterBackend,)

@@ -62,7 +62,6 @@ class Review(models.Model):
     )
     pub_date = models.DateTimeField(
         'Дата добавления', auto_now_add=True, db_index=True)
-    pass
 
     class Meta:
         verbose_name = 'Отзыв'

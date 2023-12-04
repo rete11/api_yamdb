@@ -41,23 +41,6 @@ class CommentSerializer(serializers.ModelSerializer):
         read_only_fields = ('review',)
 
 
-class TitleSerializer(serializers.ModelSerializer):
-    rating = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Title
-        fields = ('rating',)
-
-    def get_rating(self, obj):
-        average = (
-            Review.objects
-            .filter(title=obj)
-            .aggregate(Avg('score'))['score__avg']
-        )
-
-        return average
-
-
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
@@ -75,12 +58,21 @@ class GenreSerializer(serializers.ModelSerializer):
 class GetTitleSerializer(serializers.ModelSerializer):
     category = CategorySerializer()
     genre = GenreSerializer(many=True)
-    rating = serializers.IntegerField(default=0)
+    rating = serializers.SerializerMethodField()
 
     class Meta:
         model = Title
         fields = '__all__'
         read_only_fields = ('__all__',)
+
+    def get_rating(self, obj):
+        average = (
+            Review.objects
+            .filter(title=obj)
+            .aggregate(Avg('score'))['score__avg']
+        )
+
+        return average
 
 
 class PostTitleSerializer(serializers.ModelSerializer):
@@ -91,11 +83,12 @@ class PostTitleSerializer(serializers.ModelSerializer):
         slug_field='slug', queryset=Genre.objects.all(), many=True
     )
     year = serializers.IntegerField()
+    description = serializers.CharField(required=False)
 
     def to_representation(self, value):
         return GetTitleSerializer(self.instance).data
 
-    def validate_years(self, value):
+    def validate_year(self, value):
         return validate_years(value)
 
     class Meta:
