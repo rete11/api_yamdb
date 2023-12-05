@@ -6,7 +6,6 @@ from rest_framework.filters import SearchFilter
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.viewsets import ModelViewSet
-from reviews.models import Review
 
 from api.filters import TitleFilter
 from api.permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
@@ -20,6 +19,7 @@ from api.serializers import (
 )
 from categories.models import Category
 from genres.models import Genre
+from reviews.models import Review
 from titles.models import Title
 
 

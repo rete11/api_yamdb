@@ -2,11 +2,11 @@ import csv
 
 from django.conf import settings
 from django.core.management import BaseCommand
-from reviews.models import Comment, Review
 from users.models import CustomUser
 
 from categories.models import Category
 from genres.models import Genre
+from reviews.models import Comment, Review
 from titles.models import Title
 
 
