@@ -5,7 +5,8 @@ from django.conf import settings
 
 from genres.models import Genre
 from categories.models import Category
-from titles.models import Title, Comment, Review
+from reviews.models import Comment, Review
+from titles.models import Title
 from users.models import CustomUser
 
 

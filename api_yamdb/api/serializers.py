@@ -5,7 +5,8 @@ from rest_framework.relations import SlugRelatedField
 
 from categories.models import Category
 from genres.models import Genre
-from titles.models import Comment, Review, Title
+from reviews.models import Review, Comment
+from titles.models import Title
 from titles.validators import validate_years
 
 

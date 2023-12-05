@@ -1,9 +1,11 @@
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters
+from rest_framework import filters, status
+from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from api.filters import TitleFilter
@@ -18,7 +20,8 @@ from api.serializers import (
 )
 from categories.models import Category
 from genres.models import Genre
-from titles.models import Review, Title
+from reviews.models import Review
+from titles.models import Title
 
 
 class Pagination(LimitOffsetPagination):
@@ -44,6 +47,11 @@ class ReviewsViewSet(ModelViewSet):
             author=self.request.user,
             title=get_object_or_404(Title, pk=self.kwargs.get('title_id'))
         )
+
+    def get_serializer_class(self):
+        if self.request.method in ['PUT']:
+            raise MethodNotAllowed(self.request.method)
+        return super().get_serializer_class()
 
 
 class CommentsViewSet(ModelViewSet):
@@ -75,6 +83,11 @@ class CommentsViewSet(ModelViewSet):
             author=self.request.user,
             review=review
         )
+
+    def get_serializer_class(self):
+        if self.request.method in ['PUT']:
+            raise MethodNotAllowed(self.request.method)
+        return super().get_serializer_class()
 
 
 class CategoryViewSet(ModelViewSet):

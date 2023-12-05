@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'categories.apps.CategoriesConfig',
     'genres.apps.GenresConfig',
     'titles.apps.TitlesConfig',
+    'reviews.apps.ReviewsConfig',
 ]
 
 MIDDLEWARE = [

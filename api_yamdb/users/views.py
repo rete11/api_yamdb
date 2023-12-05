@@ -55,8 +55,8 @@ class SignUpView(views.APIView):
                 email=email,
                 username=username,
             )
-        except IntegrityError:
-            raise ValidationError(detail='Username или Email уже занят.')
+        except IntegrityError as e:
+            raise ValidationError(detail=f'Username или Email уже занят. {e}')
         confirmation_code = default_token_generator.make_token(user)
         send_mail(
             subject='Ваш код под подтверждения: ',
