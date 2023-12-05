@@ -120,6 +120,8 @@ class TitleViewSet(ModelViewSet):
     ordering_fields = ('name',)
 
     def get_serializer_class(self):
+        if self.request.method in ['PUT']:
+            raise MethodNotAllowed(self.request.method)
         if self.action == 'retrieve' or self.action == 'list':
             return GetTitleSerializer
         return PostTitleSerializer
