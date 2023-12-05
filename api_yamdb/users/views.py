@@ -3,7 +3,7 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
 from django.db import IntegrityError
 from django.shortcuts import get_object_or_404
-from rest_framework import permissions, status, views, viewsets
+from rest_framework import filters, permissions, status, views, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.serializers import ValidationError
@@ -12,14 +12,18 @@ from rest_framework_simplejwt.tokens import AccessToken
 from .models import CustomUser
 from .serializers import SignUpSerializer, TokenSerializer, UserSerializer
 from api.permissions import IsAdmin
+from api.views import Pagination
 
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     permission_classes = (IsAdmin,)
+    http_method_names = ('get', 'post', 'patch', 'delete')
     serializer_class = UserSerializer
-    search_fields = ('username',)
+    pagination_class = Pagination
+    filter_backends = (filters.SearchFilter,)
     lookup_field = 'username'
+    search_fields = ('username',)
 
     @action(
         detail=False,
