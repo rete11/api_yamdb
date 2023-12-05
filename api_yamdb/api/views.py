@@ -1,12 +1,13 @@
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.viewsets import ModelViewSet
 
 from api.filters import TitleFilter
-from api.permissions import IsOwnerOrReadOnly
+from api.permissions import IsOwnerOrReadOnly, IsAdminOrReadOnly
 from api.serializers import (
     CategorySerializer,
     CommentSerializer,
@@ -79,7 +80,7 @@ class CommentsViewSet(ModelViewSet):
 class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    permission_classes = (IsAdminOrReadOnly,)
     pagination_class = Pagination
     filter_backends = (SearchFilter, )
     search_fields = ('name', )
@@ -89,7 +90,8 @@ class CategoryViewSet(ModelViewSet):
 class GenreViewSet(ModelViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+    permission_classes = (IsAdminOrReadOnly,)
+    pagination_class = Pagination
     filter_backends = (SearchFilter,)
     search_fields = ('name', )
     lookup_field = 'slug'
@@ -98,8 +100,9 @@ class GenreViewSet(ModelViewSet):
 class TitleViewSet(ModelViewSet):
     queryset = Title.objects.all()
     serializer_class = GetTitleSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly,)
-    filter_backends = (DjangoFilterBackend,)
+    permission_classes = (IsAdminOrReadOnly,)
+    pagination_class = Pagination
+    filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
     filterset_class = TitleFilter
     ordering_fields = ('name',)
 
