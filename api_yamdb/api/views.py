@@ -48,10 +48,10 @@ class ReviewsViewSet(ModelViewSet):
             title=get_object_or_404(Title, pk=self.kwargs.get('title_id'))
         )
 
-    def get_serializer_class(self):
-        if self.request.method in ['PUT']:
-            raise MethodNotAllowed(self.request.method)
-        return super().get_serializer_class()
+    def update(self, request, *args, **kwargs):
+        if request.method == 'PUT':
+            raise MethodNotAllowed('PUT')
+        return super().update(request, *args, **kwargs)
 
 
 class CommentsViewSet(ModelViewSet):
@@ -84,10 +84,10 @@ class CommentsViewSet(ModelViewSet):
             review=review
         )
 
-    def get_serializer_class(self):
-        if self.request.method in ['PUT']:
-            raise MethodNotAllowed(self.request.method)
-        return super().get_serializer_class()
+    def update(self, request, *args, **kwargs):
+        if request.method == 'PUT':
+            raise MethodNotAllowed('PUT')
+        return super().update(request, *args, **kwargs)
 
 
 class CategoryViewSet(ModelViewSet):
@@ -99,6 +99,15 @@ class CategoryViewSet(ModelViewSet):
     search_fields = ('name', )
     lookup_field = 'slug'
 
+    def retrieve(self, request, *args, **kwargs):
+        raise MethodNotAllowed('GET')
+
+    def update(self, request, *args, **kwargs):
+        raise MethodNotAllowed('PUT')
+
+    def partial_update(self, request, *args, **kwargs):
+        raise MethodNotAllowed('PATCH')
+
 
 class GenreViewSet(ModelViewSet):
     queryset = Genre.objects.all()
@@ -108,6 +117,12 @@ class GenreViewSet(ModelViewSet):
     filter_backends = (SearchFilter,)
     search_fields = ('name', )
     lookup_field = 'slug'
+
+    def retrieve(self, request, *args, **kwargs):
+        raise MethodNotAllowed('GET')
+
+    def partial_update(self, request, *args, **kwargs):
+        raise MethodNotAllowed('PATCH')
 
 
 class TitleViewSet(ModelViewSet):
@@ -119,9 +134,12 @@ class TitleViewSet(ModelViewSet):
     filterset_class = TitleFilter
     ordering_fields = ('name',)
 
+    def update(self, request, *args, **kwargs):
+        if request.method == 'PUT':
+            raise MethodNotAllowed('PUT')
+        return super().update(request, *args, **kwargs)
+
     def get_serializer_class(self):
-        if self.request.method in ['PUT']:
-            raise MethodNotAllowed(self.request.method)
         if self.action == 'retrieve' or self.action == 'list':
             return GetTitleSerializer
         return PostTitleSerializer
