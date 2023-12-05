@@ -1,15 +1,15 @@
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, status
+from rest_framework import filters
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from reviews.models import Review
 
 from api.filters import TitleFilter
-from api.permissions import IsOwnerOrReadOnly, IsAdminOrReadOnly
+from api.permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
 from api.serializers import (
     CategorySerializer,
     CommentSerializer,
@@ -20,7 +20,6 @@ from api.serializers import (
 )
 from categories.models import Category
 from genres.models import Genre
-from reviews.models import Review
 from titles.models import Title
 
 

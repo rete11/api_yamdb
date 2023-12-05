@@ -2,10 +2,10 @@ from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
+from reviews.models import Comment, Review
 
 from categories.models import Category
 from genres.models import Genre
-from reviews.models import Review, Comment
 from titles.models import Title
 from titles.validators import validate_years
 
