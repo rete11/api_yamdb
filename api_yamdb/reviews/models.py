@@ -11,11 +11,20 @@ User = get_user_model()
 
 class Review(models.Model):
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='reviews')
+        User,
+        on_delete=models.CASCADE,
+        related_name='reviews',
+        verbose_name='отзыв'
+    )
     title = models.ForeignKey(
-        Title, on_delete=models.CASCADE, related_name='reviews')
-    text = models.TextField()
+        Title,
+        on_delete=models.CASCADE,
+        related_name='reviews',
+        verbose_name='произведение'
+    )
+    text = models.TextField('текст отзыва')
     score = models.IntegerField(
+        'оценка',
         validators=(
             MinValueValidator(1),
             MaxValueValidator(10)
@@ -23,7 +32,7 @@ class Review(models.Model):
         error_messages={'validators': 'Значение от 1 до 10!'}
     )
     pub_date = models.DateTimeField(
-        'Дата добавления', auto_now_add=True, db_index=True)
+        'дата добавления', auto_now_add=True, db_index=True)
 
     class Meta:
         verbose_name = 'Отзыв'
@@ -40,15 +49,21 @@ class Review(models.Model):
 
 
 class Comment(models.Model):
-    text = models.TextField()
+    text = models.TextField('текст комментария')
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='comments'
+        User,
+        on_delete=models.CASCADE,
+        related_name='comments',
+        verbose_name='автор'
     )
     pub_date = models.DateTimeField(
-        'Дата добавления', auto_now_add=True, db_index=True
+        'дата добавления', auto_now_add=True, db_index=True
     )
     review = models.ForeignKey(
-        Review, on_delete=models.CASCADE, related_name='comments'
+        Review,
+        on_delete=models.CASCADE,
+        related_name='comments',
+        verbose_name='отзыв'
     )
 
     class Meta:
