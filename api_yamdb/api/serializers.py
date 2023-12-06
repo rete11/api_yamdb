@@ -1,11 +1,10 @@
-from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
-from reviews.models import Comment, Review
 
 from categories.models import Category
 from genres.models import Genre
+from reviews.models import Comment, Review
 from titles.models import Title
 from titles.validators import validate_years
 
@@ -75,13 +74,7 @@ class GetTitleSerializer(serializers.ModelSerializer):
         read_only_fields = ('__all__',)
 
     def get_rating(self, obj):
-        average = (
-            Review.objects
-            .filter(title=obj)
-            .aggregate(Avg('score'))['score__avg']
-        )
-
-        return average
+        return obj.rating if hasattr(obj, 'rating') else None
 
 
 class PostTitleSerializer(serializers.ModelSerializer):

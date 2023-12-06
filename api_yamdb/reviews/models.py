@@ -5,6 +5,7 @@ from django.db import models
 from titles.models import Title
 
 
+OUTPUT_LIMIT = 20
 User = get_user_model()
 
 
@@ -27,10 +28,15 @@ class Review(models.Model):
     class Meta:
         verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
-        unique_together = ('author', 'title')
+        constraints = [
+            models.UniqueConstraint(
+                fields=['author', 'title'],
+                name='unique_review'
+            )
+        ]
 
     def __str__(self):
-        return self.text
+        return self.text[0:OUTPUT_LIMIT]
 
 
 class Comment(models.Model):
@@ -46,8 +52,9 @@ class Comment(models.Model):
     )
 
     class Meta:
+        ordering = ('-pub_date',)
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
 
     def __str__(self):
-        return self.text
+        return self.text[0:20]
