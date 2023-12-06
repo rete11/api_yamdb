@@ -24,7 +24,10 @@ from reviews.models import Review
 from titles.models import Title
 
 
-class GetTitlesAndReviewsMixin(ModelViewSet):
+class BaseReviewsAndCommentsViewSet(ModelViewSet):
+    permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
+    pagination_class = Pagination
+
     def get_title(self):
         return get_object_or_404(Title, pk=self.kwargs.get('title_id'))
 
@@ -34,10 +37,8 @@ class GetTitlesAndReviewsMixin(ModelViewSet):
         return super().update(request, *args, **kwargs)
 
 
-class ReviewsViewSet(GetTitlesAndReviewsMixin):
+class ReviewsViewSet(BaseReviewsAndCommentsViewSet):
     serializer_class = ReviewSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
-    pagination_class = Pagination
 
     def get_queryset(self):
         title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
@@ -48,10 +49,8 @@ class ReviewsViewSet(GetTitlesAndReviewsMixin):
         serializer.save(author=self.request.user, title=self.get_title())
 
 
-class CommentsViewSet(GetTitlesAndReviewsMixin):
+class CommentsViewSet(BaseReviewsAndCommentsViewSet):
     serializer_class = CommentSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
-    pagination_class = Pagination
 
     def get_review(self, title):
         return get_object_or_404(
