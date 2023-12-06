@@ -3,7 +3,6 @@ from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from rest_framework.exceptions import MethodNotAllowed
-from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.viewsets import ModelViewSet
 
@@ -18,6 +17,7 @@ from api.serializers import (
     PostTitleSerializer,
     ReviewSerializer,
 )
+from core.viewsets import CategoryGenreViewSet
 from categories.models import Category
 from genres.models import Genre
 from reviews.models import Review
@@ -70,46 +70,20 @@ class CommentsViewSet(GetTitlesAndReviewsMixin):
         serializer.save(author=self.request.user, review=review)
 
 
-class CategoryViewSet(ModelViewSet):
+class CategoryViewSet(CategoryGenreViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = (IsAdminOrReadOnly,)
-    pagination_class = Pagination
-    filter_backends = (SearchFilter,)
-    search_fields = ('name',)
-    lookup_field = 'slug'
-
-    def retrieve(self, request, *args, **kwargs):
-        raise MethodNotAllowed('GET')
-
-    def update(self, request, *args, **kwargs):
-        raise MethodNotAllowed('PUT')
-
-    def partial_update(self, request, *args, **kwargs):
-        raise MethodNotAllowed('PATCH')
 
 
-class GenreViewSet(ModelViewSet):
+class GenreViewSet(CategoryGenreViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    permission_classes = (IsAdminOrReadOnly,)
-    pagination_class = Pagination
-    filter_backends = (SearchFilter,)
-    search_fields = ('name',)
-    lookup_field = 'slug'
-
-    def retrieve(self, request, *args, **kwargs):
-        raise MethodNotAllowed('GET')
-
-    def partial_update(self, request, *args, **kwargs):
-        raise MethodNotAllowed('PATCH')
 
 
 class TitleViewSet(ModelViewSet):
     queryset = Title.objects.annotate(
         rating=Avg('reviews__score')
     ).select_related('category').prefetch_related('genre')
-
     serializer_class = GetTitleSerializer
     permission_classes = (IsAdminOrReadOnly,)
     pagination_class = Pagination

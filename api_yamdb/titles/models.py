@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.conf import settings
 
 from .validators import validate_years
 from categories.models import Category
@@ -44,4 +45,4 @@ class Title(models.Model):
         verbose_name_plural = 'Произведения'
 
     def __str__(self):
-        return self.name
+        return self.name[0:settings.OUTPUT_LIMIT]

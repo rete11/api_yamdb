@@ -1,11 +1,11 @@
 from django.contrib.auth import get_user_model
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.conf import settings
 
 from titles.models import Title
 
 
-OUTPUT_LIMIT = 20
 User = get_user_model()
 
 
@@ -45,7 +45,7 @@ class Review(models.Model):
         ]
 
     def __str__(self):
-        return self.text[0:OUTPUT_LIMIT]
+        return self.text[0:settings.OUTPUT_LIMIT]
 
 
 class Comment(models.Model):
@@ -72,4 +72,4 @@ class Comment(models.Model):
         verbose_name_plural = 'Комментарии'
 
     def __str__(self):
-        return self.text[0:20]
+        return self.text[0:settings.OUTPUT_LIMIT]
