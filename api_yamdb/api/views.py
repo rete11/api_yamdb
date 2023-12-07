@@ -1,3 +1,4 @@
+from core.viewsets import CategoryGenreViewSet
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -17,7 +18,6 @@ from api.serializers import (
     PostTitleSerializer,
     ReviewSerializer,
 )
-from core.viewsets import CategoryGenreViewSet
 from categories.models import Category
 from genres.models import Genre
 from reviews.models import Review
