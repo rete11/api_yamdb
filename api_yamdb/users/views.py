@@ -48,7 +48,7 @@ class SignUpView(views.APIView):
         email = serializer.validated_data.get('email')
         username = serializer.validated_data.get('username')
 
-        user, created = CustomUser.objects.get_or_create(
+        user, _ = CustomUser.objects.get_or_create(
             email=email, username=username
         )
         confirmation_code = default_token_generator.make_token(user)
