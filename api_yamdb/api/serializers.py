@@ -66,15 +66,12 @@ class GenreSerializer(serializers.ModelSerializer):
 class GetTitleSerializer(serializers.ModelSerializer):
     category = CategorySerializer()
     genre = GenreSerializer(many=True)
-    rating = serializers.SerializerMethodField()
+    rating = serializers.FloatField(default=0)
 
     class Meta:
         model = Title
         fields = '__all__'
         read_only_fields = ('__all__',)
-
-    def get_rating(self, obj):
-        return obj.rating if hasattr(obj, 'rating') else None
 
 
 class PostTitleSerializer(serializers.ModelSerializer):
