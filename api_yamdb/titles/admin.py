@@ -1,9 +1,9 @@
 from django.contrib import admin
 
 from titles.models import Title
+from core.mixins import FieldListMixin
 
 
 @admin.register(Title)
-class TitleAdmin(admin.ModelAdmin):
-    def get_list_display(self, request):
-        return [field.name for field in Title._meta.fields]
+class TitleAdmin(FieldListMixin, admin.ModelAdmin):
+    pass

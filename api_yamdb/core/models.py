@@ -10,9 +10,9 @@ class NameAndSlugModel(models.Model):
         db_index=True,
     )
 
+    def __str__(self):
+        return self.name[:settings.OUTPUT_LIMIT]
+
     class Meta:
         abstract = True
         ordering = ['name']
-
-        def __str__(self):
-            return self.name[0:settings.OUTPUT_LIMIT]
