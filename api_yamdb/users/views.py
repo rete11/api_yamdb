@@ -1,3 +1,5 @@
+import uuid
+
 from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
@@ -51,13 +53,13 @@ class SignUpView(views.APIView):
         email = serializer.validated_data.get('email')
         username = serializer.validated_data.get('username')
         try:
-            user, is_created = CustomUser.objects.get_or_create(
+            user, _ = CustomUser.objects.get_or_create(
                 email=email,
                 username=username,
             )
         except IntegrityError as e:
             raise ValidationError(detail=f'Username или Email уже занят. {e}')
-        confirmation_code = default_token_generator.make_token(user)
+        confirmation_code = uuid.uuid4()
         send_mail(
             subject='Ваш код под подтверждения: ',
             message=f'Код подтверждения - "{confirmation_code}".',
