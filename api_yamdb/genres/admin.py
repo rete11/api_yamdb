@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from genres.models import Genre
 from core.mixins import FieldListMixin
+from genres.models import Genre
 
 
 @admin.register(Genre)

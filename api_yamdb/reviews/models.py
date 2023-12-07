@@ -45,7 +45,7 @@ class Review(models.Model):
         ]
 
     def __str__(self):
-        return self.text[0:settings.OUTPUT_LIMIT]
+        return self.text[:settings.OUTPUT_LIMIT]
 
 
 class Comment(models.Model):
@@ -72,4 +72,4 @@ class Comment(models.Model):
         verbose_name_plural = 'Комментарии'
 
     def __str__(self):
-        return self.text[0:settings.OUTPUT_LIMIT]
+        return self.text[:settings.OUTPUT_LIMIT]

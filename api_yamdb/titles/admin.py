@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from titles.models import Title
 from core.mixins import FieldListMixin
+from titles.models import Title
 
 
 @admin.register(Title)
