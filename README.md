@@ -17,6 +17,84 @@ API по учебному проекту YaMdb
 
 
 # Примеры запросов
+Добавление жанра
+curl --location 'http://127.0.0.1:8000/api/v1/genres/' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer ***' \
+--data '{
+  "name": "admin-genre",
+  "slug": "admin-genre-slug"
+}'
+Пример ответа:
+{
+    "name": "admin-genre",
+    "slug": "admin-genre-slug"
+}
+
+Добавление категории:
+curl --location 'http://127.0.0.1:8000/api/v1/categories/' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer ***' \
+--data '{
+  "name": "admin-category",
+  "slug": "admin-slug"
+}'
+Пример ответа:
+{
+    "name": "admin-category",
+    "slug": "admin-slug"
+}
+
+Создание произведения:
+curl --location 'http://127.0.0.1:8000/api/v1/titles/' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer ***' \
+--data '{
+    "name": "Admin Title",
+    "year": 2020,
+    "description": "Test title by admin",
+    "genre": [
+        "admin-genre-slug"
+    ],
+    "category": "admin-slug"
+}'
+Пример ответа:
+{
+    "id": 2,
+    "category": {
+        "name": "admin-category",
+        "slug": "admin-slug"
+    },
+    "genre": [
+        {
+            "name": "admin-genre",
+            "slug": "admin-genre-slug"
+        }
+    ],
+    "rating": null,
+    "name": "Admin Title",
+    "year": 2020,
+    "description": "Test title by admin"
+}
+
+Добавление отзыва:
+curl --location 'http://127.0.0.1:8000/api/v1/titles/2/reviews/' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer ***' \
+--data '{
+    "text": "User review",
+    "score": 4
+}'
+Пример ответа:
+{
+    "id": 2,
+    "author": "root",
+    "score": 4,
+    "text": "User review",
+    "pub_date": "2023-12-07T17:33:37.217436Z",
+    "title": 2
+}
+
 Добавление комментария
 curl --location 'http://127.0.0.1:8000/api/v1/titles/1/reviews/1/comments/' \
 --header 'Content-Type: application/json' \
@@ -33,3 +111,5 @@ curl --location 'http://127.0.0.1:8000/api/v1/titles/1/reviews/1/comments/' \
     "pub_date": "2023-12-07T07:53:35.536450Z",
     "review": 1
 }
+
+Остальные примеры можно посмотреть в документации по эндпоинту: redoc/

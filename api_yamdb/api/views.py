@@ -1,15 +1,13 @@
-from core.viewsets import CategoryGenreViewSet
 from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from rest_framework.exceptions import MethodNotAllowed
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.viewsets import ModelViewSet
 
 from api.filters import TitleFilter
 from api.paginators import Pagination
-from api.permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
+from api.permissions import IsAdminOrReadOnly
 from api.serializers import (
     CategorySerializer,
     CommentSerializer,
@@ -19,29 +17,17 @@ from api.serializers import (
     ReviewSerializer,
 )
 from categories.models import Category
+from core.viewsets import BaseReviewsAndCommentsViewSet, CategoryGenreViewSet
 from genres.models import Genre
 from reviews.models import Review
 from titles.models import Title
-
-
-class BaseReviewsAndCommentsViewSet(ModelViewSet):
-    permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
-    pagination_class = Pagination
-
-    def get_title(self):
-        return get_object_or_404(Title, pk=self.kwargs.get('title_id'))
-
-    def update(self, request, *args, **kwargs):
-        if request.method == 'PUT':
-            raise MethodNotAllowed('PUT')
-        return super().update(request, *args, **kwargs)
 
 
 class ReviewsViewSet(BaseReviewsAndCommentsViewSet):
     serializer_class = ReviewSerializer
 
     def get_queryset(self):
-        title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
+        title = self.get_title()
 
         return title.reviews.all()
 
