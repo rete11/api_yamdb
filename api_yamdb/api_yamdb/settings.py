@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'django_filters',
     'users.apps.UsersConfig',
     'api.apps.ApiConfig',
+    'core.apps.CoreConfig',
     'categories.apps.CategoriesConfig',
     'genres.apps.GenresConfig',
     'titles.apps.TitlesConfig',
@@ -126,3 +127,6 @@ SIMPLE_JWT = {
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
 EMAIL_FILE_PATH = BASE_DIR / 'sent_emails'
 EMAIL_HOST = 'yamdb@mail.com'
+OUTPUT_LIMIT = 20
+CHAR_NAME = 254
+CHAR_SLUG = 50

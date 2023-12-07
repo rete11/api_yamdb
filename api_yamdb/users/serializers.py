@@ -33,6 +33,24 @@ class SignUpSerializer(serializers.Serializer):
             raise ValidationError('Некорректное имя.')
         return value
 
+    def validate(self, data):
+        email = data.get('email')
+        username = data.get('username')
+
+        if CustomUser.objects.filter(username=username).exists():
+            user = CustomUser.objects.get(username=username)
+            if user.email != email:
+                raise serializers.ValidationError(
+                    'Пользователь с таким username уже существует, '
+                    'но email не соответствует.'
+                )
+        elif CustomUser.objects.filter(email=email).exists():
+            raise serializers.ValidationError(
+                'Пользователь с таким email уже существует.'
+            )
+
+        return data
+
 
 class TokenSerializer(serializers.Serializer):
     confirmation_code = serializers.CharField(required=True)

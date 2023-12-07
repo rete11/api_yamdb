@@ -1,12 +1,10 @@
 from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
-from django.db import IntegrityError
 from django.shortcuts import get_object_or_404
 from rest_framework import filters, permissions, status, views, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.serializers import ValidationError
 from rest_framework_simplejwt.tokens import AccessToken
 
 from .models import CustomUser
@@ -34,9 +32,8 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer = UserSerializer(request.user)
         if request.method == 'PATCH':
             serializer = UserSerializer(
-                request.user,
-                data=request.data,
-                partial=True)
+                request.user, data=request.data, partial=True
+            )
             serializer.is_valid(raise_exception=True)
             serializer.save(role=request.user.role)
         return Response(serializer.data)
@@ -50,13 +47,10 @@ class SignUpView(views.APIView):
         serializer.is_valid(raise_exception=True)
         email = serializer.validated_data.get('email')
         username = serializer.validated_data.get('username')
-        try:
-            user, is_created = CustomUser.objects.get_or_create(
-                email=email,
-                username=username,
-            )
-        except IntegrityError as e:
-            raise ValidationError(detail=f'Username или Email уже занят. {e}')
+
+        user, created = CustomUser.objects.get_or_create(
+            email=email, username=username
+        )
         confirmation_code = default_token_generator.make_token(user)
         send_mail(
             subject='Ваш код под подтверждения: ',
@@ -65,8 +59,11 @@ class SignUpView(views.APIView):
             recipient_list=(email,),
         )
         return Response(
-            {'email': email, 'username': username},
-            status=status.HTTP_200_OK)
+            {
+                'email': email,
+                'username': username
+            }, status=status.HTTP_200_OK
+        )
 
 
 class TokenView(views.APIView):
@@ -87,4 +84,5 @@ class TokenView(views.APIView):
 
         return Response(
             {'confirmation_code': ['Invalid token!']},
-            status=status.HTTP_400_BAD_REQUEST)
+            status=status.HTTP_400_BAD_REQUEST
+        )

@@ -1,13 +1,14 @@
+from core.viewsets import CategoryGenreViewSet
+from django.db.models import Avg
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from rest_framework.exceptions import MethodNotAllowed
-from rest_framework.filters import SearchFilter
-from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.viewsets import ModelViewSet
 
 from api.filters import TitleFilter
+from api.paginators import Pagination
 from api.permissions import IsAdminOrReadOnly, IsOwnerOrReadOnly
 from api.serializers import (
     CategorySerializer,
@@ -23,109 +24,65 @@ from reviews.models import Review
 from titles.models import Title
 
 
-class Pagination(LimitOffsetPagination):
-    default_limit = 10
-    max_limit = 100
-
-
-class ReviewsViewSet(ModelViewSet):
-    serializer_class = ReviewSerializer
+class BaseReviewsAndCommentsViewSet(ModelViewSet):
     permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
     pagination_class = Pagination
 
+    def get_title(self):
+        return get_object_or_404(Title, pk=self.kwargs.get('title_id'))
+
+    def update(self, request, *args, **kwargs):
+        if request.method == 'PUT':
+            raise MethodNotAllowed('PUT')
+        return super().update(request, *args, **kwargs)
+
+
+class ReviewsViewSet(BaseReviewsAndCommentsViewSet):
+    serializer_class = ReviewSerializer
+
     def get_queryset(self):
-        title = get_object_or_404(
-            Title,
-            pk=self.kwargs.get('title_id')
-        )
+        title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
 
         return title.reviews.all()
 
     def perform_create(self, serializer):
-        serializer.save(
-            author=self.request.user,
-            title=get_object_or_404(Title, pk=self.kwargs.get('title_id'))
-        )
-
-    def update(self, request, *args, **kwargs):
-        if request.method == 'PUT':
-            raise MethodNotAllowed('PUT')
-        return super().update(request, *args, **kwargs)
+        serializer.save(author=self.request.user, title=self.get_title())
 
 
-class CommentsViewSet(ModelViewSet):
+class CommentsViewSet(BaseReviewsAndCommentsViewSet):
     serializer_class = CommentSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
-    pagination_class = Pagination
+
+    def get_review(self, title):
+        return get_object_or_404(
+            Review, pk=self.kwargs.get('review_id'), title=title
+        )
 
     def get_queryset(self):
-        title = get_object_or_404(
-            Title,
-            pk=self.kwargs.get('title_id')
-        )
-        review = get_object_or_404(
-            Review,
-            pk=self.kwargs.get('review_id'),
-            title=title
-        )
+        title = self.get_title()
+        review = self.get_review(title)
 
         return review.comments.all()
 
     def perform_create(self, serializer):
-        title = get_object_or_404(Title, pk=self.kwargs.get('title_id'))
-        review = get_object_or_404(
-            Review,
-            pk=self.kwargs.get('review_id'),
-            title=title
-        )
-        serializer.save(
-            author=self.request.user,
-            review=review
-        )
-
-    def update(self, request, *args, **kwargs):
-        if request.method == 'PUT':
-            raise MethodNotAllowed('PUT')
-        return super().update(request, *args, **kwargs)
+        title = self.get_title()
+        review = self.get_review(title)
+        serializer.save(author=self.request.user, review=review)
 
 
-class CategoryViewSet(ModelViewSet):
+class CategoryViewSet(CategoryGenreViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = (IsAdminOrReadOnly,)
-    pagination_class = Pagination
-    filter_backends = (SearchFilter, )
-    search_fields = ('name', )
-    lookup_field = 'slug'
-
-    def retrieve(self, request, *args, **kwargs):
-        raise MethodNotAllowed('GET')
-
-    def update(self, request, *args, **kwargs):
-        raise MethodNotAllowed('PUT')
-
-    def partial_update(self, request, *args, **kwargs):
-        raise MethodNotAllowed('PATCH')
 
 
-class GenreViewSet(ModelViewSet):
+class GenreViewSet(CategoryGenreViewSet):
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
-    permission_classes = (IsAdminOrReadOnly,)
-    pagination_class = Pagination
-    filter_backends = (SearchFilter,)
-    search_fields = ('name', )
-    lookup_field = 'slug'
-
-    def retrieve(self, request, *args, **kwargs):
-        raise MethodNotAllowed('GET')
-
-    def partial_update(self, request, *args, **kwargs):
-        raise MethodNotAllowed('PATCH')
 
 
 class TitleViewSet(ModelViewSet):
-    queryset = Title.objects.all()
+    queryset = Title.objects.annotate(
+        rating=Avg('reviews__score')
+    ).select_related('category').prefetch_related('genre')
     serializer_class = GetTitleSerializer
     permission_classes = (IsAdminOrReadOnly,)
     pagination_class = Pagination
