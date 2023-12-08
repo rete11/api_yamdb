@@ -45,4 +45,4 @@ class Title(models.Model):
         verbose_name_plural = 'Произведения'
 
     def __str__(self):
-        return self.name[0:settings.OUTPUT_LIMIT]
+        return self.name[:settings.OUTPUT_LIMIT]
