@@ -1,6 +1,5 @@
-<<<<<<< HEAD
 # api_yamdb
-api_yamdb
+
 =======
 
 # Установка
