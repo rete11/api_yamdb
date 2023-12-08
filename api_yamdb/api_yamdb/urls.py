@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 """YaMDb URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -19,6 +20,16 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+=======
+from django.contrib import admin
+from django.urls import include, path
+from django.views.generic import TemplateView
+
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('api/', include('api.urls')),
+>>>>>>> 0da0ef7b50be21e3e6f5d2cff8297ddb80370de2
     path(
         'redoc/',
         TemplateView.as_view(template_name='redoc.html'),

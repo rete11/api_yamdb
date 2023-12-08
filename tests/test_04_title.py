@@ -3,8 +3,16 @@ from http import HTTPStatus
 import pytest
 
 from tests.utils import (
+<<<<<<< HEAD
     check_pagination, check_permissions, create_categories, create_genre,
     create_titles
+=======
+    check_pagination,
+    check_permissions,
+    create_categories,
+    create_genre,
+    create_titles,
+>>>>>>> 0da0ef7b50be21e3e6f5d2cff8297ddb80370de2
 )
 
 

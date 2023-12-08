@@ -3,7 +3,12 @@ from http import HTTPStatus
 import pytest
 
 from tests.utils import (
+<<<<<<< HEAD
     check_pagination, invalid_data_for_user_patch_and_creation
+=======
+    check_pagination,
+    invalid_data_for_user_patch_and_creation,
+>>>>>>> 0da0ef7b50be21e3e6f5d2cff8297ddb80370de2
 )
 
 

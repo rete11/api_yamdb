@@ -3,6 +3,10 @@ import sys
 
 from django.utils.version import get_version
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0da0ef7b50be21e3e6f5d2cff8297ddb80370de2
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(BASE_DIR)
 

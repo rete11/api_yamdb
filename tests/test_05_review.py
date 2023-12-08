@@ -1,11 +1,23 @@
 from http import HTTPStatus
 
+<<<<<<< HEAD
 import pytest
 from django.db.utils import IntegrityError
 
 from tests.utils import (
     check_fields, check_pagination, create_reviews, create_single_review,
     create_titles
+=======
+from django.db.utils import IntegrityError
+import pytest
+
+from tests.utils import (
+    check_fields,
+    check_pagination,
+    create_reviews,
+    create_single_review,
+    create_titles,
+>>>>>>> 0da0ef7b50be21e3e6f5d2cff8297ddb80370de2
 )
 
 

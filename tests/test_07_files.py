@@ -2,6 +2,10 @@ import os
 
 from tests.conftest import MANAGE_PATH, project_dir_content, root_dir_content
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0da0ef7b50be21e3e6f5d2cff8297ddb80370de2
 api_path = os.path.join(MANAGE_PATH, 'api')
 if 'api' in project_dir_content and os.path.isdir(api_path):
     api_dir_content = os.listdir(api_path)
