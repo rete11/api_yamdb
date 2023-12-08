@@ -109,4 +109,3 @@ curl --location 'http://127.0.0.1:8000/api/v1/titles/1/reviews/1/comments/' \
 }
 
 Остальные примеры можно посмотреть в документации по эндпоинту: redoc/
->>>>>>> 0da0ef7b50be21e3e6f5d2cff8297ddb80370de2
